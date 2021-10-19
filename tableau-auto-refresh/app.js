@@ -17,7 +17,7 @@ let refreshInterval;
 function refreshDataSource(){
     refreshInterval = setInterval(() => {
         viz.refreshDataAsync();
-    }, 15)
+    }, 15000)
 }
 
 function stopRefresh(){
