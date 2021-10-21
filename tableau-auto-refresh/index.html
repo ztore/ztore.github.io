@@ -2,6 +2,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>NGB LIVE Dashboard</title>
+    <link rel="icon" href="https://www.neigbuy.com/favicon/favicon-32x32.png">
     <script type="text/javascript"
             src="https://tableau.data.ztore.com/javascripts/api/tableau-2.min.js"></script>
 
@@ -26,7 +27,7 @@
                     fontFamily: "sans-serif",        // the font family
                     fontSize: undefined,             // the font size, dynamically calulated if omitted in options
                     fontWeight: 700,                 // the font weight
-                    autostart: true,                // start the countdown automatically
+                    autostart: false,                // start the countdown automatically
                     seconds: 15,                     // the number of seconds to count down
                     label: ["second", "seconds"],    // the label to use or false if none
                     smooth: true,                    // should the timer be smooth or stepping
@@ -109,7 +110,6 @@
                     this._initPen(this._getCanvas());
                     if (this.settings.autostart) {
                         this.start();
-                        this.pause()
                     }
                 },
 
@@ -292,15 +292,9 @@
         }
 
         initAutoRefresh = function () {
-            console.log("AutoRefresh init");
-            countdown._drawCountdownShape(Math.PI * 3.5, false);
-            countdown._drawCountdownLabel(0);
+            countdown.start();
+            countdown.pause()
         };
-
-        this.appApi = {
-            initAutoRefresh: initAutoRefresh
-        };
-        var viz;
 
         function initViz() {
             var containerDiv = document.getElementById("vizContainer"),
@@ -308,32 +302,27 @@
                 options = {
                     toolbarPosition: tableau.ToolbarPosition.TOP
                     // hideToolbar: true,
-                    // onFirstInteractive: function(){
-                    //     countdown.start()
-                    // }
                 };
 
             viz = new tableau.Viz(containerDiv, url, options);
         }
 
-        function start_all() {
-            initViz();
-            appApi.initAutoRefresh()
+        function init_all() {
+            initAutoRefresh();
+            initViz()
         }
 
     </script>
 </head>
 
-<body onload="start_all();">
-<div id="countdownContainer">
-    <div id="countdown" onmouseover="countdown.showControls(true);" onmouseout="countdown.showControls(false);"
-         style="display:inline-block"></div>
+<body onload="init_all();">
+<div id="countdown" onmouseover="countdown.showControls(true);" onmouseout="countdown.showControls(false);"
+     style="display:inline-block">
     <script type="text/javascript" charset="utf-8">
         var countdown = $("#countdown").countdown360({
             onComplete: function () {
                 viz.refreshDataAsync();
                 countdown.start()
-                // viz.addEventListener(tableau.TableauEventName.CUSTOM_VIEW_LOAD, countdown.start())
             }
         });
         $('#countdown').click(function (e) {
@@ -341,5 +330,12 @@
         });
     </script>
 </div>
+<aside style="font-style:sans-serif;display:inline-block;padding:5px;background-color:rgba(254,221,0,0.47);">
+    <p>1. Confirm `Event Start Datetime` and `Tab `Name` is correct<br/>
+        2. Switch to Dashboard<br/>
+        3. Mouseover the Refresh Timer on the left and press to start<br/>
+        4. Press the `Full Screen` button on the top-right corner
+    </p>
+</aside>
 </body>
 </html>
