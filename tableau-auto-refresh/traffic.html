@@ -28,7 +28,7 @@
                     fontSize: undefined,             // the font size, dynamically calulated if omitted in options
                     fontWeight: 700,                 // the font weight
                     autostart: false,                // start the countdown automatically
-                    seconds: 30,                     // the number of seconds to count down
+                    seconds: 15,                     // the number of seconds to count down
                     label: ["second", "seconds"],    // the label to use or false if none
                     smooth: true,                    // should the timer be smooth or stepping
                     direction: "cw",                 // Clockwise (cw) or counter-clockwise (ccw)
@@ -298,7 +298,7 @@
 
         function initViz() {
             var containerDiv = document.getElementById("vizContainer"),
-                url = "https://tableau.data.ztore.com/views/NGBLiveShow-TrafficvS2/TrafficDashboard?:alerts=no&:showShareOptions=false&:subscriptions=no",
+                url = "https://tableau.data.ztore.com/views/NGBLiveShow-TrafficvS3/TrafficDashboard?:alerts=no&:showShareOptions=false&:subscriptions=no",
                 options = {
                     toolbarPosition: tableau.ToolbarPosition.TOP
                     // hideToolbar: true,
@@ -336,6 +336,7 @@
         3. Mouseover the Refresh Timer on the left and press to start<br/>
         4. Press the `Full Screen` button on the top-right corner<br/>
         <a href="https://ztore.github.io/tableau-auto-refresh/">To Live Sales Dashboard</a>
+        <a href="https://ztore.github.io/tableau-auto-refresh/traffic-fast">Remove animation</a>
     </p>
 </aside>
 </body>
