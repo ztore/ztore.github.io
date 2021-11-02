@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css"/>
+        <script>
+            var records = null
+             $(document).ready(function(){
+                
+                var date =  "2021-10-29%2008:00:00"
+                var tabName = "%E7%9B%B4%E6%92%AD%E5%84%AA%E6%83%A0"
+                var duration = 1
+                var offset = 0
+                var limit = 5
+                
+                var table = $('#data-table').DataTable({
+                    
+                    ajax : { "url": "https://qxaslszavl.execute-api.ap-east-1.amazonaws.com/prod/api/v1/data",
+                                type: "GET",
+                                contentType: 'application/json; charset=utf-8',
+                                /*data:{
+                                    "startAt":date,
+                                    "tabName":tabName,
+                                    "duration":duration,
+                                    "offset":offset,
+                                    "limit":limit
+                                   },
+                                   */
+                                "dataSrc": ""
+                                },
+                    columns: [
+                        { "data": "deal_id" },
+                        { "data": "deal_name" },
+                        { "data": "price" },
+                        { "data": "quota" },
+                        { "data": "order_deal_payment_status" },
+                        { "data": "sales_qty" },
+                        { "data": "order_datetime" },
+                    ],
+                    pageLength: 1000
+                });
+                
+                
+                setInterval( function () {
+                    
+                     table.ajax.reload();
+                }, 3000 );
+            
+            });
+
+
+        </script>
+    </head>
+    <body>
+        <table id="data-table" class="table table-bordered" width="100%">
+            <thead>
+              <tr>
+              <th>Deal Id</th>
+              
+              <th>Deal Name</th>
+              <th>Price</th>
+              <th>Quota</th>
+              <th>Order Deal Payment Status</th>
+              <th>Sales Qty</th>
+              <th>Order Datetime</th>
+              
+              </tr>
+            </thead>
+           
+           
+           </table>
+    </body>
+</html>
