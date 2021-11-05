@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css"/>
+        <script>
+            var records = null
+             $(document).ready(function(){
+
+                var type = "dealOrders"
+                var start_date = "2021-11-04%2000:00:00"
+                var end_date = "2021-11-04%2023:59:59"
+                var tabName = "%E4%BB%8A%E6%97%A5%E9%96%83%E8%B3%BC"
+                var offset = 0
+                var limit = 20
+
+                var table = $('#data-table').DataTable({
+
+                    ajax : { "url": "https://qxaslszavl.execute-api.ap-east-1.amazonaws.com/prod/api/v1/data?data=" + type + "&tabName=" + tabName + "&startAt=" + start_date + "&endAt=" + end_date + "&offset=" + offset + "&limit=" + limit,
+                                type: "GET",
+                                contentType: 'application/json; charset=utf-8',
+
+                                "dataSrc": ""
+                                },
+                    columns: [
+                        { "data": "deal_id" },
+                        { "data": "deal_name" },
+                        { "data": "price" },
+                        { "data": "quota" },
+                        { "data": "sales_qty" },
+                    ],
+                    pageLength: 1000
+                });
+
+
+                setInterval( function () {
+
+                     table.ajax.reload();
+                }, 3000 );
+
+            });
+
+
+        </script>
+    </head>
+    <body>
+        <table id="data-table" class="table table-bordered" width="100%">
+            <thead>
+              <tr>
+              <th>Deal Id</th>
+
+              <th>Deal Name</th>
+              <th>Price</th>
+              <th>Quota</th>
+              <th>Sales Qty</th>
+
+              </tr>
+            </thead>
+
+
+           </table>
+    </body>
+</html>
