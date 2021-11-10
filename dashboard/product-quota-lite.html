@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap.min.css"/>
+    <script>
+
+        var type = "dealOrders"
+        var start_date = "2021-11-9T00:00"
+        var end_date = "2021-11-10T00:00"
+        var tabName = "今日閃購"
+        var offset = 0
+        var limit = 1000
+        var url = "https://qxaslszavl.execute-api.ap-east-1.amazonaws.com/prod/api/v1/data?data=" + type + "&tabName=" + tabName + "&startAt=" + start_date + "&endAt=" + end_date + "&offset=" + offset + "&limit=" + limit
+        var table
+
+        $(document).ready(function () {
+
+            var styleRule1 = 'max-width:100px;height:12px;margin:0 auto;';
+            var styleRule2 = 'border:2px ' + 'ridge' + ' ' + '#BCBCBC' + ';line-height:12px;font-size:14px;color:' + '#000' + ';background:' + '#E6E6E6' + ';position:relative;border-radius:5px;';
+            var styleRule3 = 'height:12px;line-height:12px;text-align:center;background-color:' + '#5FD868' + ';padding:auto 6px;' + 'border-top-left-radius:4px;border-bottom-left-radius:4px;';
+
+
+            table = $('#data-table').DataTable({
+
+                ajax: {
+                    "url": url,
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+
+                    "dataSrc": ""
+                },
+                columns: [
+                    {"data": "deal_id"},
+                    {"data": "deal_name"},
+                    {
+                        "data": "price",
+                        render: $.fn.dataTable.render.number(',', '.', 1, '$')
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return String(data["sales_qty"]) + "/" + String(data["quota"])
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            output = parseFloat((data["sales_qty"] / data["quota"]) * 100).toFixed(2)
+                            return '<div style="' + styleRule1 + '"><div style="' + styleRule2 + '"><div style="' + styleRule3 + 'width:' + output + '%;"></div><div style="width:100%;text-align:center;position:absolute;left:0;top:0;">' + output + '%</div></div></div>'
+                        }
+                    },
+                ],
+                pageLength: 1000
+            });
+
+            setInterval(function () {
+
+                table.ajax.reload();
+            }, 3000);
+
+        });
+
+        function on_click() {
+
+            start_date = encodeURI(document.getElementById("startdate").value);
+            end_date = encodeURI(document.getElementById("enddate").value);
+            tabName = document.getElementById("tabName").value;
+
+            url = "https://qxaslszavl.execute-api.ap-east-1.amazonaws.com/prod/api/v1/data?data=" + type + "&tabName=" + tabName + "&startAt=" + start_date + "&endAt=" + end_date + "&offset=" + offset + "&limit=" + limit
+            table.ajax.url(url).load()
+        }
+    </script>
+
+</head>
+<aside style="font-style:sans-serif;display:inline-block;padding:5px;background-color:rgba(254,0,80,0.47);">
+    <p>
+    <a href="https://ztore.github.io/dashboard/">To Live Sales Dashboard</a><br/><br/>
+    <a href="https://ztore.github.io/dashboard/traffic">To Traffic Dashboard</a> / <a
+            href="https://ztore.github.io/dashboard/traffic-fast">(Remove animation)</a><br/><br/>
+        <a href="https://ztore.github.io/dashboard/product-quota">To Deal Live Quota Dashboard</a> / (LITE)
+    </p>
+</aside>
+
+<body>
+
+
+Start Date: <input type="datetime-local" id="startdate" name="startdate">
+End Date: <input type="datetime-local" id="enddate" name="enddate">
+Tab Name: <input type="text" id="tabName" name="tabName">
+<!--    <input type="button" id="btn" value="update"> -->
+<button onclick="on_click()">update</button>
+
+<table id="data-table" class="table table-bordered" width="100%">
+    <thead>
+    <tr>
+        <th>Deal Id</th>
+
+        <th>Deal Name</th>
+        <th>Price</th>
+        <th>Sales Qty / Quota</th>
+        <th>Sell Through</th>
+
+    </tr>
+    </thead>
+
+
+</table>
+</body>
+</html>
