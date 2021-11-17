@@ -10,13 +10,12 @@
     <script>
 
         var type = "dealOrders"
-        var start_date = "2021-11-9T00:00"
-        var end_date = "2021-11-10T00:00"
+        var start_date = "2021-11-11T00:00"
+        var duration = 2
         var tabName = "今日閃購"
-        var offset = 0
-        var limit = 1000
-        var url = "https://qxaslszavl.execute-api.ap-east-1.amazonaws.com/prod/api/v1/data?data=" + type + "&tabName=" + tabName + "&startAt=" + start_date + "&endAt=" + end_date + "&offset=" + offset + "&limit=" + limit
+        var url = "https://vlpn9zuloj.execute-api.ap-east-1.amazonaws.com/prod/prod-ngb-db-api?datatype=" + type + "&tabName=" + tabName + "&startAt=" + start_date + "&duration=" + duration
         var table
+
 
         $(document).ready(function () {
 
@@ -42,9 +41,25 @@
                         render: $.fn.dataTable.render.number(',', '.', 1, '$')
                     },
                     {
+                        "data": "cost",
+                        render: $.fn.dataTable.render.number(',', '.', 1, '$')
+                    },
+                    {
                         "data": null,
                         render: function (data, type, row) {
-                            return String(data["sales_qty"]) + "/" + String(data["quota"])
+                            return '$' + String(parseFloat(data["sales_qty"] * data["price"]).toFixed(2))
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return '$' + String(parseFloat(data["sales_qty"] * (data["price"] - data["cost"])).toFixed(2))
+                        }
+                    },
+                    {
+                        "data": null,
+                        render: function (data, type, row) {
+                            return String(data["sales_qty"]) + " / " + String(data["quota"])
                         }
                     },
                     {
@@ -55,23 +70,46 @@
                         }
                     },
                 ],
+                columnDefs: [
+                    { "width": "60%", "targets": 1 },
+                    {
+                        targets: 2,
+                        className: 'dt-body-right'
+                    },
+                    {
+                        targets: 3,
+                        className: 'dt-body-right'
+                    },
+                    {
+                        targets: 4,
+                        className: 'dt-body-right'
+                    },
+                    {
+                        targets: 5,
+                        className: 'dt-body-right'
+                    },
+                    {
+                        targets: 6,
+                        className: 'dt-body-right'
+                    },
+                ],
                 pageLength: 1000
             });
 
             setInterval(function () {
 
                 table.ajax.reload();
-            }, 300);
+            }, 1000);
 
         });
 
         function on_click() {
 
             start_date = encodeURI(document.getElementById("startdate").value);
-            end_date = encodeURI(document.getElementById("enddate").value);
+            // duration = encodeURI(document.getElementById("duration").value);
             tabName = document.getElementById("tabName").value;
 
-            url = "https://qxaslszavl.execute-api.ap-east-1.amazonaws.com/prod/api/v1/data?data=" + type + "&tabName=" + tabName + "&startAt=" + start_date + "&endAt=" + end_date + "&offset=" + offset + "&limit=" + limit
+            url = "https://vlpn9zuloj.execute-api.ap-east-1.amazonaws.com/prod/prod-ngb-db-api?datatype=" + type + "&tabName=" + tabName + "&startAt=" + start_date + "&duration=" + duration
             table.ajax.url(url).load()
         }
     </script>
@@ -79,8 +117,8 @@
 </head>
 <aside style="font-style:sans-serif;display:inline-block;padding:5px;background-color:rgba(254,0,80,0.47);">
     <p>
-    <a href="https://ztore.github.io/dashboard/">To Live Sales Dashboard</a><br/><br/>
-    <a href="https://ztore.github.io/dashboard/traffic">To Traffic Dashboard</a> / <a
+        <a href="https://ztore.github.io/dashboard/">To Live Sales Dashboard</a><br/><br/>
+        <a href="https://ztore.github.io/dashboard/traffic">To Traffic Dashboard</a> / <a
             href="https://ztore.github.io/dashboard/traffic-fast">(Remove animation)</a><br/><br/>
         <a href="https://ztore.github.io/dashboard/product-quota">To Deal Live Quota Dashboard</a> / (LITE)
     </p>
@@ -89,11 +127,21 @@
 <body>
 
 
-Start Date: <input type="datetime-local" id="startdate" name="startdate">
-End Date: <input type="datetime-local" id="enddate" name="enddate">
-Tab Name: <input type="text" id="tabName" name="tabName">
+Start Date: <input type="date" id="startdate" name="startdate">
+<!--Duration: <input type="number" id="duration" name="duration">-->
+Tab Name:
+<!--<input type="text" list="tabName" id="tabName" name="tabName">-->
+<select id="tabName" name="tabName">
+    <option value="今日閃購">今日閃購</option>
+    <option value="直播優惠">直播優惠</option>
+</select>
 <!--    <input type="button" id="btn" value="update"> -->
 <button onclick="on_click()">update</button>
+
+<!--<datalist id="tabName">-->
+<!--  <option value="今日閃購">-->
+<!--  <option value="直播優惠">-->
+<!--</datalist>-->
 
 <table id="data-table" class="table table-bordered" width="100%">
     <thead>
@@ -102,6 +150,9 @@ Tab Name: <input type="text" id="tabName" name="tabName">
 
         <th>Deal Name</th>
         <th>Price</th>
+        <th>Cost</th>
+        <th>GMV</th>
+        <th>Margin</th>
         <th>Sales Qty / Quota</th>
         <th>Sell Through</th>
 
