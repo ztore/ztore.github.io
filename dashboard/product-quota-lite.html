@@ -35,6 +35,7 @@
                 },
                 columns: [
                     {"data": "deal_id"},
+                    {"data": "tab_name"},
                     {"data": "deal_name"},
                     {
                         "data": "price",
@@ -47,13 +48,13 @@
                     {
                         "data": null,
                         render: function (data, type, row) {
-                            return '$' + String(parseFloat(data["sales_qty"] * data["price"]).toFixed(2))
+                            return $.fn.dataTable.render.number(',', '.', 1, '$').display(data["sales_qty"] * data["price"])
                         }
                     },
                     {
                         "data": null,
                         render: function (data, type, row) {
-                            return '$' + String(parseFloat(data["sales_qty"] * (data["price"] - data["cost"])).toFixed(2))
+                            return $.fn.dataTable.render.number(',', '.', 1, '$').display(data["sales_qty"] * (data["price"] - data["cost"]))
                         }
                     },
                     {
@@ -65,17 +66,18 @@
                     {
                         "data": null,
                         render: function (data, type, row) {
-                            output = parseFloat((data["sales_qty"] / data["quota"]) * 100).toFixed(2)
+                            if (data["sales_qty"]==0 || data["sales_qty"]==0){
+                                output = 0
+                            } else {
+                                output = parseFloat((data["sales_qty"] / data["quota"]) * 100).toFixed(2)
+
+                            }
                             return '<div style="' + styleRule1 + '"><div style="' + styleRule2 + '"><div style="' + styleRule3 + 'width:' + output + '%;"></div><div style="width:100%;text-align:center;position:absolute;left:0;top:0;">' + output + '%</div></div></div>'
                         }
                     },
                 ],
                 columnDefs: [
-                    { "width": "60%", "targets": 1 },
-                    {
-                        targets: 2,
-                        className: 'dt-body-right'
-                    },
+                    { "width": "60%", "targets": 2 },
                     {
                         targets: 3,
                         className: 'dt-body-right'
@@ -92,15 +94,23 @@
                         targets: 6,
                         className: 'dt-body-right'
                     },
+                    {
+                        targets: 7,
+                        className: 'dt-body-right'
+                    },
                 ],
-                pageLength: 1000
+                pageLength: 1000,
+                createdRow: function(row, data, dataIndex, cells) {
+                    if ((data["sales_qty"] / data["quota"]) >= 1) {
+                        $(row).addClass('Highlight');
+                    }
+                }
             });
 
             setInterval(function () {
 
                 table.ajax.reload();
             }, 1000);
-
         });
 
         function on_click() {
@@ -115,6 +125,15 @@
     </script>
 
 </head>
+<style>
+    .Highlight > .sorting_1 {
+        background-color: #ff9393;
+    }
+
+    .Highlight {
+        background-color: #ff9393;
+    }
+</style>
 <aside style="font-style:sans-serif;display:inline-block;padding:5px;background-color:rgba(254,0,80,0.47);">
     <p>
         <a href="https://ztore.github.io/dashboard/">To Live Sales Dashboard</a><br/><br/>
@@ -147,7 +166,7 @@ Tab Name:
     <thead>
     <tr>
         <th>Deal Id</th>
-
+        <th>Tab Name</th>
         <th>Deal Name</th>
         <th>Price</th>
         <th>Cost</th>
