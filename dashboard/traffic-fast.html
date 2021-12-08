@@ -14,7 +14,8 @@
             duration = 2,
             tabName = "今日閃購",
             viz,
-            viz2
+            viz2,
+            viz3
 
 
         function on_click() {
@@ -25,6 +26,7 @@
             tabName = document.getElementById("tabName").value;
             initViz();
             initViz2();
+            initViz3();
         }
 
 
@@ -51,7 +53,7 @@
                     // toolbarPosition: tableau.ToolbarPosition.TOP
                     hideToolbar: true,
                     hideTabs: true,
-                    width: "1200px",
+                    width: "450px",
                     height: "1050px"
                 };
 
@@ -59,8 +61,26 @@
                 viz2.dispose();
             }
 
-            var vizURL2 = "https://tableau.data.ztore.com/views/NGBLiveShow-TrafficvS6/UserBehavior?:render=false&Event+Start+Datetime=" + start_date_format + "&Event%20Duration%20%28hrs%29=" + duration + "&Tab+Name=" + tabName;
+            var vizURL2 = "https://tableau.data.ztore.com/views/NGBLiveShow-TrafficvS6/UserBehaviorMix?:render=false&Event+Start+Datetime=" + start_date_format + "&Event%20Duration%20%28hrs%29=" + duration + "&Tab+Name=" + tabName;
             viz2 = new tableau.Viz(containerDiv2, vizURL2, options);
+        }
+
+        function initViz3() {
+            var containerDiv3 = document.getElementById("vizContainer3"),
+                options = {
+                    // toolbarPosition: tableau.ToolbarPosition.TOP
+                    hideToolbar: true,
+                    hideTabs: true,
+                    width: "750px",
+                    height: "1050px"
+                };
+
+            if (viz3) { // If a viz object exists, delete it.
+                viz3.dispose();
+            }
+
+            var vizURL3 = "https://tableau.data.ztore.com/views/NGBLiveShow-TrafficvS6/TopDeal?:render=false&Event+Start+Datetime=" + start_date_format + "&Event%20Duration%20%28hrs%29=" + duration + "&Tab+Name=" + tabName;
+            viz3 = new tableau.Viz(containerDiv3, vizURL3, options);
         }
 
         initAutoRefresh = function () {
@@ -72,7 +92,8 @@
         function init_all() {
             initAutoRefresh();
             initViz();
-            initViz2()
+            initViz2();
+            initViz3()
         }
 
 
@@ -87,6 +108,7 @@
             onComplete: function () {
                 viz.refreshDataAsync();
                 viz2.refreshDataAsync();
+                viz3.refreshDataAsync();
                 countdown.start()
             }
         });
@@ -140,6 +162,9 @@
 
     <div class="float-child" style="float:right;" >
         <div id="vizContainer2"></div>
+    </div>
+    <div class="float-child" style="float:right;" >
+        <div id="vizContainer3"></div>
     </div>
 
 </div>
