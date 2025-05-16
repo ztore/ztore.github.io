@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>NGB LIVE Dashboard</title>
+    <link rel="icon" href="https://www.neigbuy.com/favicon/favicon-32x32.png">
+    <script type="text/javascript"
+            src="https://tableau-old.data.ztore.com/javascripts/api/tableau-2.6.0.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="jquery.countdown360.min.js"></script>
+    <script type="text/javascript">
+
+        initAutoRefresh = function () {
+            countdown.start();
+            countdown.pause()
+        };
+
+        function initViz() {
+            var containerDiv = document.getElementById("vizContainer"),
+                url = "https://tableau-old.data.ztore.com/views/NGBLiveShow-SalesPerformancevZ/NGBLiveSales?:alerts=no&:showShareOptions=false&:subscriptions=no",
+                options = {
+                    toolbarPosition: tableau.ToolbarPosition.TOP
+                    // hideToolbar: true,
+                };
+
+            viz = new tableau.Viz(containerDiv, url, options);
+        }
+
+        function init_all() {
+            initAutoRefresh();
+            initViz()
+        }
+
+    </script>
+</head>
+
+<body onload="init_all();">
+<div id="countdown" onmouseover="countdown.showControls(true);" onmouseout="countdown.showControls(false);"
+     style="display:inline-block">
+    <script type="text/javascript" charset="utf-8">
+        var countdown = $("#countdown").countdown360({
+            seconds     : 30,
+            onComplete: function () {
+                viz.refreshDataAsync();
+                countdown.start()
+            }
+        });
+        $('#countdown').click(function (e) {
+            countdown.getStatus() ? countdown.pause() : countdown.cont();
+        });
+    </script>
+</div>
+<aside style="font-style:normal;display:inline-block;padding:5px;background-color:rgba(254,0,80,0.47);">
+
+    To Live Sales Dashboard<br/>
+    <a href="https://ztore.github.io/dashboard/traffic">To Traffic Dashboard</a> / <a
+            href="https://ztore.github.io/dashboard/traffic-fast">(Remove animation)</a><br/>
+        <a href="https://ztore.github.io/dashboard/product-quota">To Deal Live Quota Dashboard</a> / <a
+                href="https://ztore.github.io/dashboard/product-quota-lite"> (LITE)</a>
+
+</aside>
+<aside style="font-style:normal;display:inline-block;padding:5px;background-color:rgba(254,221,0,0.47);">
+    1. Confirm `Event Start Datetime` and `Tab `Name` is correct<br/>
+    2. Switch to Dashboard<br/>
+    3. Mouseover the Refresh Timer on the left and press to start<br/>
+    4. Press the `Full Screen` button on the top-right corner<br/>
+</aside>
+
+</body>
+</html>
