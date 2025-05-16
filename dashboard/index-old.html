@@ -4,7 +4,7 @@
     <title>NGB LIVE Dashboard</title>
     <link rel="icon" href="https://www.neigbuy.com/favicon/favicon-32x32.png">
     <script type="text/javascript"
-            src="https://tableau-old.data.ztore.com/javascripts/api/tableau-2.6.0.min.js"></script>
+            src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="jquery.countdown360.min.js"></script>
@@ -17,14 +17,13 @@
 
         function initViz() {
             var containerDiv = document.getElementById("vizContainer"),
-                url = "https://tableau-old.data.ztore.com/views/NGBLiveShow-SalesPerformancevZ/NGBLiveSales?:alerts=no&:showShareOptions=false&:subscriptions=no",
+                url = "https://tableau.data.ztore.com/views/NGBLiveShow-SalesPerformancevZ/NGBLiveSales?:alerts=no&:showShareOptions=false&:subscriptions=no",
                 options = {
                     toolbarPosition: tableau.ToolbarPosition.TOP
                     // hideToolbar: true,
                 };
 
             viz = new tableau.Viz(containerDiv, url, options);
-            console.log(viz);
         }
 
         function init_all() {
